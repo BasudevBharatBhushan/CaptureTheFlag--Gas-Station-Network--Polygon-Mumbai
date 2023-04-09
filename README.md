@@ -21,6 +21,11 @@ https://user-images.githubusercontent.com/64151314/230799189-75a55023-cc02-402a-
 
 Link - https://mumbai.polygonscan.com/tx/0xadf02fbecfd540e5a3653ff01d520a95c76dbb3845201c42cf64c9cba84b2e88
 
+----
+
+> **Note:** Txn details of Meta Txns shows up in 'internal transactions','advanced' on etherscan and in 'events' tab on Polygonscan. Or you can open the RelayHub page and see it there.
+---- 
+
 ## Steps to convert your regular smart contract to GSN Smart Contract
 
 Step 1: Install following dependencies
