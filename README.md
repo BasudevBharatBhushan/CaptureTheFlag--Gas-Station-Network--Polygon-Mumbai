@@ -239,6 +239,6 @@ Done You are good to go, you can now call gasless transaction using GSN
 
 ## Link to Important Documentation
 
-1. [Getting Started with GSN] (https://docs.opengsn.org/javascript-client/getting-started.html#working-examples)
-2. [GSN Architecture] (https://docs.opengsn.org/#architecture)
-3. [GSN for Polygon Mumbai] (https://docs.opengsn.org/networks/polygon/mumbai.html)
+1. [Getting Started with GSN](https://docs.opengsn.org/javascript-client/getting-started.html#working-examples)
+2. [GSN Architecture](https://docs.opengsn.org/#architecture)
+3. [GSN for Polygon Mumbai](https://docs.opengsn.org/networks/polygon/mumbai.html)
