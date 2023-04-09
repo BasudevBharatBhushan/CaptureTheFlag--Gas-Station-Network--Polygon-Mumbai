@@ -1,6 +1,5 @@
 import "./App.css";
 import { useState, useEffect } from "react";
-import { ethers, BigNumber } from "ethers";
 import { ReadContracts, WriteContracts } from "./Blockchain/polygon";
 
 const App = () => {

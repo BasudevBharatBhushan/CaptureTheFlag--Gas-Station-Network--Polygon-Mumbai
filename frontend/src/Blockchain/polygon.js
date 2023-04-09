@@ -11,9 +11,8 @@ const AcceptEverythingPaymaster =
 const CAPTURE_THE_FLAG_CONTRACT_ADDRESS =
   process.env.REACT_APP_CAPTURE_THE_FLAG_CONTRACT_ADDRESS;
 
-window.ethereum.enable();
-
 const baseProvider = new ethers.providers.Web3Provider(window.ethereum);
+await baseProvider.send("eth_requestAccounts", []);
 
 const gsnConfig = {
   paymasterAddress: AcceptEverythingPaymaster,
