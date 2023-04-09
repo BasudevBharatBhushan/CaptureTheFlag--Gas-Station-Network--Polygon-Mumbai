@@ -143,6 +143,7 @@ const App = () => {
             </tr>
           </tbody>
         </table>
+        <i>Note: This contract is using accept everything paymaster</i>
       </main>
       <footer>
         <p>
