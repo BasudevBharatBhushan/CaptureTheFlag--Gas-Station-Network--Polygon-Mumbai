@@ -5,43 +5,67 @@ import { ReadContracts, WriteContracts } from "./Blockchain/polygon";
 
 const App = () => {
   const [account, setAccount] = useState(null);
-  const [currentFlagHolder, setCurrentFlagHolder] = useState(null);
+  const [currentFlagHolder, setCurrentFlagHolder] = useState({
+    previousHolder: "",
+    currentHolder: "",
+  });
 
   useEffect(() => {
-    readCurrentHolder();
-    // console.log(signer);
+    HandleCaptureEmittedEvent();
+    console.log(currentFlagHolder);
+  }, [currentFlagHolder]);
+
+  useEffect(() => {
+    const handleAccountsChanged = (accounts) => {
+      setAccount(accounts[0]);
+    };
+
+    if (window.ethereum) {
+      window.ethereum.on("accountsChanged", handleAccountsChanged);
+    }
+
+    return () => {
+      if (window.ethereum) {
+        window.ethereum.removeListener(
+          "accountsChanged",
+          handleAccountsChanged
+        );
+      }
+    };
   }, []);
 
-  const contractTest = async () => {
-    if (window.ethereum) {
-      console.log(account);
-    }
-  };
-
   const captureFlag = async () => {
+    const captureButton = document.querySelector(".capture-button");
     try {
       if (window.ethereum) {
-        console.log("Triggered");
+        if (!account) {
+          alert("Please connect your wallet first");
+          return;
+        }
+        console.log("Triggering transaction...");
+
+        console.log(WriteContracts);
+
+        // show loading animation
+        captureButton.disabled = true;
+        captureButton.innerHTML = "Capturing";
+
         const tx = await WriteContracts.captureTheFlag();
         await tx.wait(1);
         console.log(tx);
-        alert(`Transaction successful! Tx Hash: ${tx.hash}`);
-      }
-    } catch (error) {
-      console.log(error);
-      alert(`Transaction failed! Error: ${error}`);
-    }
-  };
 
-  const readCurrentHolder = async () => {
-    try {
-      if (window.ethereum) {
-        const currentHolder = await ReadContracts.currentHolder();
-        console.log(currentHolder);
-        setCurrentFlagHolder(currentHolder);
+        // hide loading animation and show success message
+        captureButton.disabled = false;
+        captureButton.innerHTML = "CAPTURE THE FLAG";
+        alert(`Transaction successful! Tx Hash: ${tx.hash}`);
+        HandleCaptureEmittedEvent();
       }
     } catch (error) {
       console.log(error);
+
+      // hide loading animation and show error message
+      captureButton.disabled = false;
+      captureButton.innerHTML = "CAPTURE THE FLAG";
       alert(`Transaction failed! Error: ${error}`);
     }
   };
@@ -51,22 +75,85 @@ const App = () => {
       const accounts = await window.ethereum.request({
         method: "eth_requestAccounts",
       });
+      console.log(accounts);
       setAccount(accounts[0]);
     }
   };
 
+  const DisconnectWallet = async () => {
+    if (window.ethereum) {
+      if (account) {
+        setAccount(null);
+      }
+    }
+  };
+
+  const HandleCaptureEmittedEvent = async () => {
+    if (window.ethereum) {
+      const catchEmit = WriteContracts.on(
+        "FlagCaptured",
+        (previousHolder, currentHolder) => {
+          setCurrentFlagHolder({ previousHolder, currentHolder });
+          console.log(previousHolder, currentHolder);
+        }
+      );
+
+      console.log(catchEmit);
+    }
+  };
+
   return (
-    <div>
-      {!account ? (
-        <button onClick={ConnectWallet}>Connect Wallet</button>
-      ) : (
-        <p>{account}</p>
-      )}
-      <button onClick={contractTest}>Test Contract Integration</button>
-      <button onClick={captureFlag}>Caputre Flag</button>
-      <h1>Current Holder</h1>
-      <p>{currentFlagHolder}</p>
-      HIIIIIIIII
+    <div className="App">
+      <header>
+        <p>
+          <span>
+            <h1>CAPTURE THE FLAG</h1>
+          </span>
+          <br />
+          Gas Station Network (Gasless Transaction)
+        </p>
+
+        <button
+          className="connect-button"
+          onClick={account ? DisconnectWallet : ConnectWallet}
+        >
+          {account ? `Disconnect` : "Connect"}
+        </button>
+      </header>
+      <main>
+        <p className="ac">{account ? `Connected Address: ${account}` : ""}</p>
+        <button className="capture-button" onClick={captureFlag}>
+          CAPTURE THE FLAG
+        </button>
+        <table className="flag-table">
+          <thead>
+            <tr>
+              <th>Previous Holder</th>
+              <th>Current Holder</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                {currentFlagHolder ? currentFlagHolder.previousHolder : ""}
+              </td>
+              <td>
+                {currentFlagHolder ? currentFlagHolder.currentHolder : ""}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </main>
+      <footer>
+        <p>
+          <a
+            href="https://docs.opengsn.org/networks/polygon/mumbai.html"
+            target="_blank"
+          >
+            Gas Station Network
+          </a>
+        </p>
+      </footer>
     </div>
   );
 };

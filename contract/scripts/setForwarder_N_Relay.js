@@ -5,32 +5,41 @@ async function main() {
     console.log("---------------------------------------------------")
     const whitelistPaymaster = await ethers.getContract("WhitelistPaymaster")
 
-    // const setForwarder = await whitelistPaymaster.setTrustedForwarder(
-    //     process.env.FORWARDER_CONTRACT_ADDRESS
-    // )
-    // await setForwarder.wait(1)
+    // Set Forwarder
+    const setForwarder = await whitelistPaymaster.setTrustedForwarder(
+        process.env.FORWARDER_CONTRACT_ADDRESS
+    )
+    await setForwarder.wait(1)
 
-    // console.log(setForwarder)
+    console.log(setForwarder)
 
-    // const setWhitelistSender = await whitelistPaymaster.whitelistSender(
-    //     "0x85b3dB26424a88e7C1319E40a6324d64Acf1fFA2",
-    //     true
-    // )
-    // await setWhitelistSender.wait(1)
-    // console.log(setWhitelistSender)
+    //Set Whitelist Configuration
+    const setConfiguration = await whitelistPaymaster.setConfiguration(true, false, false, false)
+    await setConfiguration.wait(1)
 
+    console.log(setConfiguration)
 
+    //Set Whitelist Sender
+    const setWhitelistSender = await whitelistPaymaster.whitelistSender(
+        "0x85b3dB26424a88e7C1319E40a6324d64Acf1fFA2",
+        true
+    )
+    await setWhitelistSender.wait(1)
+    console.log(setWhitelistSender)
 
-    // const setRelayHub = await whitelistPaymaster.setRelayHub(
-    //     "0x3232f21A6E08312654270c78A773f00dd61d60f5"
-    // )
+    //Set Relay Hub
+    const setRelayHub = await whitelistPaymaster.setRelayHub(process.env.RELAY_HUB_CONTRACT_ADDRESS)
 
-    // await setRelayHub.wait(1)
+    await setRelayHub.wait(1)
 
-    // console.log(setRelayHub)
+    console.log(setRelayHub)
 
-    
+    //Fund Relay Hub
 
+    /*
+        Fund the relay hub by visiting to this link
+        Link - https://mumbai.polygonscan.com/address/0x3232f21A6E08312654270c78A773f00dd61d60f5#writeContract#F2
+    */
 }
 
 main()
